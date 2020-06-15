@@ -7,44 +7,79 @@ class Home extends React.Component {
 
         this.state = {
             budgetedItems: [],
-            itemValue: '',
-            itemName: ''
+            itemValue: 0,
+            itemName: '',
+            monthlyTotal: 0,
+            errorMessage: ''
         }
+
         this.handleValueChange = this.handleValueChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    addItem = () => {
-
-    }
     handleValueChange(event) {
         this.setState({ itemValue: event.target.value });
     }
+
     handleNameChange(event) {
         this.setState({ itemName: event.target.value });
     }
 
-    handleSubmit(event) {
+    addItem = (event) => {
         event.preventDefault();
-        console.log(this.state)
+        if (typeof parseFloat(this.state.itemValue) === NaN) {
+
+        }
+        else {
+            let itemArr = this.state.budgetedItems;
+
+            itemArr.push({
+                name: this.state.itemName,
+                monthlyCost: this.state.itemValue
+            })
+
+            this.getMonthlyTotal();
+            this.setState({ budgetedItems: itemArr, itemValue: '', itemName: '' })
+        }
     }
+
+    getMonthlyTotal = () => {
+        let monthlyTotal = 0;
+
+        this.state.budgetedItems.map(item => {
+            monthlyTotal = monthlyTotal + parseFloat(item.monthlyCost);
+        })
+
+        this.setState({ monthlyTotal: monthlyTotal })
+    }
+
     render() {
         return (
             <div>
                 <h1>Next Budget</h1>
-                <form onSubmit={this.handleSubmit}>
+
+                <form onSubmit={this.addItem}>
                     <label>
                         Name:
-                        <input type="text" value={this.state.itemName} onChange={this.handleNameChange} />
+                        <input type="text" placeholder="Mortgage" value={this.state.itemName} onChange={this.handleNameChange} />
                     </label>
                     <br></br>
                     <label>
-                        Value:
-                        <input type="text" value={this.state.itemValue} onChange={this.handleValueChange} />
+                        Monthly Cost: $
+                        <input type="text" placeholder="1200" value={this.state.itemValue} onChange={this.handleValueChange} />
                     </label>
                     <input type="submit" value="Submit" />
                 </form>
+
+                <h1>Your monthly expenses:</h1>
+                <ul>
+                    {this.state.budgetedItems.map((item, index) => (
+                        <li key={index}>{item.name}: ${item.monthlyCost}</li>
+                    ))}
+                </ul>
+
+                <h1>Monthly total: ${this.state.monthlyTotal}</h1>
+
             </div>
         )
     }
