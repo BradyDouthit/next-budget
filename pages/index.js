@@ -10,7 +10,8 @@ class Home extends React.Component {
             itemValue: 0,
             itemName: '',
             monthlyTotal: 0,
-            errorMessage: ''
+            valueErrorMessage: '',
+            nameErrorMessage: ''
         }
 
         this.handleValueChange = this.handleValueChange.bind(this);
@@ -27,10 +28,15 @@ class Home extends React.Component {
 
     addItem = (event) => {
         event.preventDefault();
-        if (typeof parseFloat(this.state.itemValue) === NaN) {
-
+        //if parsed value from user is not a number
+        if (isNaN(parseFloat(this.state.itemValue)) || (this.state.itemValue === 0)) {
+            //set error message
+            this.setState({ valueErrorMessage: "Please enter a number." })
         }
-        else {
+        if (!this.state.itemName.length) {
+            this.setState({ nameErrorMessage: "Please enter a name." })
+        }
+        if (!isNaN(parseFloat(this.state.itemValue)) && (this.state.itemValue != 0) && this.state.itemName.length) {
             let itemArr = this.state.budgetedItems;
 
             itemArr.push({
@@ -39,7 +45,7 @@ class Home extends React.Component {
             })
 
             this.getMonthlyTotal();
-            this.setState({ budgetedItems: itemArr, itemValue: '', itemName: '' })
+            this.setState({ budgetedItems: itemArr, itemValue: '', itemName: '', valueErrorMessage: '', nameErrorMessage: '' })
         }
     }
 
@@ -62,6 +68,7 @@ class Home extends React.Component {
                     <label>
                         Name:
                         <input type="text" placeholder="Mortgage" value={this.state.itemName} onChange={this.handleNameChange} />
+                        <div style={{color: "red"}}>{this.state.nameErrorMessage || ''}</div>
                     </label>
                     <br></br>
                     <label>
@@ -69,6 +76,7 @@ class Home extends React.Component {
                         <input type="text" placeholder="1200" value={this.state.itemValue} onChange={this.handleValueChange} />
                     </label>
                     <input type="submit" value="Submit" />
+                    <div style={{color: "red"}}>{this.state.valueErrorMessage || ''}</div>
                 </form>
 
                 <h1>Your monthly expenses:</h1>
