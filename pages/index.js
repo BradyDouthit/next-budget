@@ -31,12 +31,14 @@ class Home extends React.Component {
         //if parsed value from user is not a number
         if (isNaN(parseFloat(this.state.itemValue)) || (this.state.itemValue === 0)) {
             //set error message
-            this.setState({ valueErrorMessage: "Please enter a number." })
+            this.setState({ valueErrorMessage: "Please enter a number (greater than 0)." })
         }
+        //if the value is an empty string
         if (!this.state.itemName.length) {
             this.setState({ nameErrorMessage: "Please enter a name." })
         }
-        if (!isNaN(parseFloat(this.state.itemValue)) && (this.state.itemValue != 0) && this.state.itemName.length) {
+        //if value is a number and greater than 0, and name is not an empty string
+        if (!isNaN(parseFloat(this.state.itemValue)) && (this.state.itemValue > 0) && this.state.itemName.length) {
             let itemArr = this.state.budgetedItems;
 
             itemArr.push({
