@@ -1,5 +1,4 @@
 import React from 'react';
-import BudgetItem from '../components/BudgetItem';
 
 class Home extends React.Component {
     constructor(props) {
